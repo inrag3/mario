@@ -125,3 +125,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   count: 10
+  audioClip: {fileID: 8300000, guid: 3be2ef37023d4dc4c9fee6aca472bb51, type: 3}
