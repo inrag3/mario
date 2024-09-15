@@ -13,6 +13,7 @@ public class Enemy : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private Vector2 velocity;
     private float xMax;
+    private Player player;
 
     private void Awake()
     {
@@ -25,6 +26,7 @@ public class Enemy : MonoBehaviour
     private void Start()
     {
         rigidbody2d.velocity = direction * speed;
+        player = GameObject.FindGameObjectWithTag(Player).GetComponent<Player>();
     }
 
     private void FixedUpdate()
@@ -61,7 +63,7 @@ public class Enemy : MonoBehaviour
             return;
         }
         bool dead = collision.contacts.All(contact => contact.point.y > transform.position.y);
-        if (dead)
+        if (dead || player.StarPower)
         {
             Destroy(gameObject);
         }

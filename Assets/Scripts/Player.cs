@@ -1,7 +1,9 @@
 using System;
+using System.Collections;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(BoxCollider2D))]
 [RequireComponent(typeof(SpriteRenderer), typeof(Animator))]
@@ -14,6 +16,7 @@ public class Player : MonoBehaviour
     [SerializeField] private float speed;
     [SerializeField] private float jumpForce;
     [SerializeField] private Text scoreText;
+    [SerializeField] private float speedCoefficient;
 
     private int score;
     private Vector2 velocity;
@@ -23,6 +26,8 @@ public class Player : MonoBehaviour
     private Rigidbody2D rigidbody2d;
     private SpriteRenderer spriteRenderer;
     private Animator animator;
+
+    public bool StarPower { get; private set; }
 
     private void Awake()
     {
@@ -107,6 +112,31 @@ public class Player : MonoBehaviour
             isGrounded = !collision.contacts.All(contact => contact.point.y > transform.position.y);
         }
     }
+
+    public void StarPowerActive(float duration = 5f)
+    {
+        StartCoroutine(StarPowerAnimation(duration));
+    }
+
+    private IEnumerator StarPowerAnimation(float duration)
+    {
+        StarPower = true;
+        speed *= speedCoefficient;
+        var elapsed = 0f;
+        while (elapsed < duration)
+        {
+            if (Time.frameCount % 4 == 0)
+            {
+                spriteRenderer.color = Random.ColorHSV(0f, 1f, 1f, 1f, 1f, 1f);
+            }
+            yield return null;
+            elapsed += Time.deltaTime;
+        }
+        speed /= speedCoefficient;
+        spriteRenderer.color = Color.white;
+        StarPower = false;
+    }
+
 
     private void Jump()
     {
