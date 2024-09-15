@@ -1,16 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class Coin : MonoBehaviour
 {
-    private void Start()
-    {
-    }
+    [SerializeField] private int count;
 
-    private void Update()
+    private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (!collision.CompareTag("Player"))
+            return;
+        var player = collision.GetComponent<Player>();
+        player.AddCoin(count);
+        Destroy(gameObject);
     }
-
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(BoxCollider2D))]
 [RequireComponent(typeof(SpriteRenderer), typeof(Animator))]
@@ -12,7 +13,9 @@ public class Player : MonoBehaviour
 
     [SerializeField] private float speed;
     [SerializeField] private float jumpForce;
+    [SerializeField] private Text scoreText;
 
+    private int score;
     private Vector2 velocity;
     private bool isJumping;
     private bool isGrounded;
@@ -20,7 +23,6 @@ public class Player : MonoBehaviour
     private Rigidbody2D rigidbody2d;
     private SpriteRenderer spriteRenderer;
     private Animator animator;
-
 
     private void Awake()
     {
@@ -38,6 +40,15 @@ public class Player : MonoBehaviour
         UpdateVelocity(horizontal);
         UpdateAnimaton(horizontal);
         UpdateRotation(horizontal);
+    }
+
+    private void Update()
+    {
+        if (!Input.GetKeyDown(KeyCode.Space) || !isGrounded)
+            return;
+
+        Jump();
+        isGrounded = false;
     }
 
     private void UpdateAnimaton(float horizontal)
@@ -75,13 +86,10 @@ public class Player : MonoBehaviour
         rigidbody2d.velocity = velocity;
     }
 
-    private void Update()
+    public void AddCoin(int count)
     {
-        if (!Input.GetKeyDown(KeyCode.Space) || !isGrounded)
-            return;
-
-        Jump();
-        isGrounded = false;
+        score += count;
+        scoreText.text = $"{score}";
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
