@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Linq;
 using UnityEngine;
@@ -7,7 +6,7 @@ using Random = UnityEngine.Random;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(BoxCollider2D))]
 [RequireComponent(typeof(SpriteRenderer), typeof(Animator))]
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IContactable, IUpgradable
 {
     private const string Horizontal = "Horizontal";
     private const string Ground = "Ground";
@@ -15,7 +14,6 @@ public class Player : MonoBehaviour
 
     [SerializeField] private float speed;
     [SerializeField] private float jumpForce;
-    [SerializeField] private Text scoreText;
     [SerializeField] private float speedCoefficient;
 
     private int score;
@@ -91,12 +89,6 @@ public class Player : MonoBehaviour
         rigidbody2d.velocity = velocity;
     }
 
-    public void AddCoin(int count)
-    {
-        score += count;
-        scoreText.text = $"{score}";
-    }
-
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (!isGrounded && collision.gameObject.CompareTag(Ground))
@@ -143,4 +135,18 @@ public class Player : MonoBehaviour
         animator.SetInteger(State, 2);
         rigidbody2d.AddForce(transform.up * jumpForce, ForceMode2D.Impulse);
     }
+
+    public void Upgrade(Statistics statistics)
+    {
+
+    }
+}
+
+public interface IUpgradable
+{
+    public void Upgrade(Statistics statistics);
+}
+
+public interface IContactable
+{
 }
