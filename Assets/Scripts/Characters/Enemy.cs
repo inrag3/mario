@@ -1,9 +1,12 @@
 using System;
 using System.Linq;
+using Collectables;
+using Collectables.Buffs;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(SpriteRenderer))]
+[RequireComponent(typeof(BuffData))]
 public class Enemy : MonoBehaviour
 {
     private const string Player = "Player";
@@ -14,6 +17,7 @@ public class Enemy : MonoBehaviour
     private Vector2 velocity;
     private float xMax;
     private Player player;
+    public event Action<Enemy> Died;
 
     private void Awake()
     {
@@ -65,6 +69,7 @@ public class Enemy : MonoBehaviour
         bool dead = collision.contacts.All(contact => contact.point.y > transform.position.y);
         if (dead || player.StarPower)
         {
+            Died?.Invoke(this);
             Destroy(gameObject);
         }
         else

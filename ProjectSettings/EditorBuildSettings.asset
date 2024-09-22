@@ -7,8 +7,11 @@ EditorBuildSettings:
   m_Scenes:
   - enabled: 1
     path: Assets/Scenes/StartingScene.unity
-    guid: 6e3d9f03378ff1d4bbb7543cd9abe07b
+    guid: 62223af16a9210c488a6d01c75edda1f
   - enabled: 1
     path: Assets/Scenes/Level.unity
     guid: c3e6cf2be10282943aed43c2e7ff2d81
+  - enabled: 1
+    path: Assets/Scenes/Winning.unity
+    guid: 6e3d9f03378ff1d4bbb7543cd9abe07b
   m_configObjects: {}

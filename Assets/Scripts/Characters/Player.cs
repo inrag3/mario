@@ -1,12 +1,16 @@
+using System;
 using System.Collections;
 using System.Linq;
+using Collectables;
+using Collectables.Buffs;
+using Collectables.Coins;
 using UnityEngine;
-using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(BoxCollider2D))]
 [RequireComponent(typeof(SpriteRenderer), typeof(Animator))]
-public class Player : MonoBehaviour, IContactable, IUpgradable
+[RequireComponent(typeof(BuffDetector), typeof(CoinDetector))]
+public class Player : MonoBehaviour, IContactable, IBuffable
 {
     private const string Horizontal = "Horizontal";
     private const string Ground = "Ground";
@@ -16,6 +20,9 @@ public class Player : MonoBehaviour, IContactable, IUpgradable
     [SerializeField] private float jumpForce;
     [SerializeField] private float speedCoefficient;
 
+    private BuffDetector buffDetector;
+    private CoinDetector coinDetector;
+
     private int score;
     private Vector2 velocity;
     private bool isJumping;
@@ -23,18 +30,50 @@ public class Player : MonoBehaviour, IContactable, IUpgradable
     private float xMax;
     private Rigidbody2D rigidbody2d;
     private SpriteRenderer spriteRenderer;
+
     private Animator animator;
+    private Bank.Bank _bank;
 
     public bool StarPower { get; private set; }
+
+    public void Initialize(Bank.Bank bank)
+    {
+        _bank = bank;
+    }
 
     private void Awake()
     {
         rigidbody2d = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        buffDetector = GetComponent<BuffDetector>();
+        coinDetector = GetComponent<CoinDetector>();
         animator = GetComponent<Animator>();
         //Вообще не должно быть тут)
         var camera = Camera.main!;
         xMax = camera.orthographicSize * camera.aspect;
+    }
+
+    private void OnEnable()
+    {
+        buffDetector.Detected += OnBuffDetected;
+        coinDetector.Detected += OnCoinDetected;
+    }
+
+    private void OnDisable()
+    {
+        buffDetector.Detected -= OnBuffDetected;
+    }
+
+    private void OnCoinDetected(Coin coin)
+    {
+        _bank.Add(coin.Value);
+        coin.Collect();
+    }
+
+    private void OnBuffDetected(Buff buff)
+    {
+        buff.Apply(this);
+        buff.Collect();
     }
 
     private void FixedUpdate()
@@ -105,7 +144,7 @@ public class Player : MonoBehaviour, IContactable, IUpgradable
         }
     }
 
-    public void StarPowerActive(float duration = 5f)
+    public void ActivateStarPower(float duration = 5f)
     {
         StartCoroutine(StarPowerAnimation(duration));
     }
@@ -135,16 +174,6 @@ public class Player : MonoBehaviour, IContactable, IUpgradable
         animator.SetInteger(State, 2);
         rigidbody2d.AddForce(transform.up * jumpForce, ForceMode2D.Impulse);
     }
-
-    public void Upgrade(Statistics statistics)
-    {
-
-    }
-}
-
-public interface IUpgradable
-{
-    public void Upgrade(Statistics statistics);
 }
 
 public interface IContactable

@@ -1,26 +1,9 @@
 using UnityEngine;
 
-public class Collectable : MonoBehaviour
+namespace Collectables
 {
-    [SerializeField] private Statistics _statistics;
-
-    private void OnTriggerEnter2D(Collider2D collision)
+    public abstract class Collectable : MonoBehaviour
     {
-        if (!collision.TryGetComponent(out IUpgradable upgradable))
-            return;
-        DoActionOnPick(upgradable);
-    }
-
-    protected virtual void DoActionOnPick( IUpgradable upgradable)
-    {
-        upgradable.Upgrade(_statistics);
+        public abstract void Collect();
     }
 }
-
-public class Coin : Collectable
-{
-
-}
-
-
-

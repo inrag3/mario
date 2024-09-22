@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 9198582014530187574}
   m_Layer: 0
   m_Name: MisteryBox
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -126,4 +126,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _duration: 0.25
   _sprite: {fileID: 673617359, guid: 7f3ac5080cef2274d91a7dc9b30c0df4, type: 3}
-  _prefab: {fileID: 5808068443885051067, guid: 5da7225775f20be49ae4da61821c9c92, type: 3}
+  _prefab: {fileID: -4397080473903154438, guid: bfb18b2c9a939494e9f2f33dd74b2cea, type: 3}
